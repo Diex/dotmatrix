@@ -3,17 +3,32 @@ import * as paper from "paper";
 export class DotMatrix {
     private rows: number;
     private columns: number;
+    
     private matrix: boolean[][];
+
+    private dots: paper.Path.Circle[][];
+    private dotSize = 10; // Size of each dot
+    private dotSpacing = 15; // Spacing between dots
+
 
     constructor(rows: number, columns: number) {
         this.rows = rows;
         this.columns = columns;
         this.matrix = [];
+        this.dots = [];
 
         for (let i = 0; i < rows; i++) {
             this.matrix[i] = [];
+            this.dots[i] = [];
+            const dotY = i * this.dotSpacing + this.dotSpacing / 2;
+            
             for (let j = 0; j < columns; j++) {
                 this.matrix[i][j] = false;
+                this.dots[i][j] = new paper.Path.Circle(new paper.Point(0, 0), this.dotSize / 2);
+                const dotX = j * this.dotSpacing + this.dotSpacing / 2;
+                
+                this.dots[i][j].position.x = dotX;
+                this.dots[i][j].position.y = dotY;
             }
         }
 
@@ -29,6 +44,16 @@ export class DotMatrix {
             }
         }
     }
+
+    setLocation(x: number,y: number){
+        for (let i = 0; i < this.rows; i++) {
+            for (let j = 0; j < this.columns; j++) {                
+                this.dots[i][j].position.x += x;
+                this.dots[i][j].position.y += y;
+            }
+        }
+    }
+
 
     setDot(row: number, column: number, value: boolean) {
         if (row >= 0 && row < this.rows && column >= 0 && column < this.columns) {
@@ -57,25 +82,35 @@ export class DotMatrix {
         }
     }
 
+
+    setRowByte(row: number, data: number) {
+        if (row >= 0 && row < this.rows) {
+            for (let i = 0; i < this.columns; i++) {
+                this.matrix[row][i] = this.getBit(data, i);
+            }
+        }
+     
+    }
+    
+    getBit(number: number, position: number): boolean {
+        return (number >> position) & 1 ? true : false;
+    }
+
     render(canvas:any) {
-        const dotSize = 10; // Size of each dot
-        const dotSpacing = 15; // Spacing between dots
 
         
         // Loop through each dot in the matrix
         for (let row = 0; row < this.rows; row++) {
             for (let column = 0; column < this.columns; column++) {
-                const dotX = column * dotSpacing + dotSpacing / 2;
-                const dotY = row * dotSpacing + dotSpacing / 2;
+                
+                // // Draw a circular dot
+                const dot = this.dots[row][column];
 
-                // Draw a circular dot
-                const dot = new paper.Path.Circle(new paper.Point(dotX, dotY), dotSize / 2);
-                dot.fillColor = this.matrix[row][column] ? 'black' : 'white';
+             
+                dot.fillColor = this.matrix[row][column] ? 'white' : 'black';
                 dot.strokeColor = 'black';
-                dot.strokeWidth = 1;
+                dot.strokeWidth = 0;
 
-                // Add the dot to the canvas
-                // canvas.addChild(dot);
             }
         }
     }

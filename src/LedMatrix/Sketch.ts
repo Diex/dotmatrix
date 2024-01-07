@@ -1,28 +1,30 @@
 import { DotMatrix } from "./DotMatrix";
 
-export class Sketch {
-    objects: any[] = [];
-    constraints: any[] = [];
 
+
+export class Sketch {
+    
     dotmatrix: DotMatrix;
     canvas: HTMLCanvasElement;
     
     constructor(canvas: HTMLCanvasElement) {
-        this.canvas = canvas;
         console.log("Sketch constructor");
-        this.objects = [];
-        this.constraints = [];
-
+    
+        this.canvas = canvas;        
         this.dotmatrix = new DotMatrix(8, 8);
+        this.dotmatrix.setLocation(100, 100);
         this.render();
-    }
 
+        for (let i = 0; i < 8; i++) {
+            this.dotmatrix.setRowByte(i, 0);
+        }    
+    }
+    
 
 
     render() {
-
-        this.dotmatrix.render(this.canvas);
-        
+        this.dotmatrix.randomize();
+        this.dotmatrix.render(this.canvas);        
         window.requestAnimationFrame(this.render.bind(this));
     }
 }

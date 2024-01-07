@@ -3,7 +3,7 @@ import * as Cloth from "./ClothGen";
 import * as Paper from "paper";
 
 export class Sketch {
-    
+
     cloth: Cloth.ClothGen; 
     objects: any[] = [];
     constraints: any[] = [];
