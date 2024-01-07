@@ -1,23 +1,25 @@
 import * as Paper from "paper";
-import {Sketch} from "./Sketch";
-
+import {Sketch as clothgen} from "./ClothGen/Sketch";
+import {Sketch as ledmatrix} from "./LedMatrix/Sketch";
 
 const paths: any[] = [];
+
 window.onload = () => {
     
     const canvas: HTMLCanvasElement = <HTMLCanvasElement>document.getElementById('content');
-    // const gl = canvas.getContext("webgl");
     if (!canvas) {
         throw new Error('Could not find canvas named content in document!');
+        // see: templates/index.handlebars
     }
-
-    document.getElementById("download-to-svg").onclick = download;
     Paper.setup(canvas);
-
-    let sketch = new Sketch(canvas);
+    
+    document.getElementById("download-to-svg").onclick = download;
+    
+    // let sketch = new clothgen(canvas);
+    let sketch = new ledmatrix(canvas);
     sketch.render();
-    window['paper'] = Paper;
 
+    window['paper'] = Paper;
 };
 
 

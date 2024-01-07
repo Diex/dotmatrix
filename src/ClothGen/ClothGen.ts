@@ -12,8 +12,10 @@ export class ClothGen {
     mouseConstraint: Matter.MouseConstraint;
 
     cloth = this.createCloth(100, 100, 64, 32, 0, 0, false, 15.875);
-    // cloth = this.createCloth(100, 100, 128, 128, 0, 0, false, 7.875);
+    
     constructor(canvas: HTMLCanvasElement) {
+        // es necesario pasarle el canvas para poder usar el mouse
+
         console.log("ClothGen constructor");        
         
         let width = this.cloth.bodies[31].position.x - this.cloth.bodies[0].position.x;    
@@ -34,7 +36,7 @@ export class ClothGen {
             let offset = Math.sin(i/30*2*Math.PI*mod2) * Math.sin(i/30*2*Math.PI*mod1) * -amp
             // let offset =  Math.sin(i/30*2*Math.PI*mod1) * -amp
             // let offset = 0;
-            // console.log(offset);
+            
             Matter.Body.translate(this.cloth.bodies[i],{x: 0, y: offset }); 
             Matter.Body.setPosition(this.cloth.bodies[i],{x: startx + i * step, y: this.cloth.bodies[i].position.y });
             this.cloth.bodies[i].isStatic = true;        
@@ -42,17 +44,11 @@ export class ClothGen {
         
         // this.cloth.bodies[0].isStatic = true;        
         // this.cloth.bodies[63].isStatic = true;
-
-        // 
-        
-        
+  
 
 
         Matter.Composite.add(this.world, [
             this.cloth,
-            // Matter.Bodies.circle(300, 500, 80, { isStatic: true, render: { fillStyle: '#060a19' } }),
-            // Matter.Bodies.rectangle(500, 480, 80, 80, { isStatic: true, render: { fillStyle: '#060a19' } }),
-            // Matter.Bodies.rectangle(400, 609, 800, 50, { isStatic: true })
         ]);
 
         this.mouse = Matter.Mouse.create(canvas),
@@ -68,9 +64,6 @@ export class ClothGen {
 
         Matter.Composite.add(this.world, this.mouseConstraint);
            this.runner = Matter.Runner.run(Matter.Runner.create(), this.engine);
-
-
-     
     }
 
 
