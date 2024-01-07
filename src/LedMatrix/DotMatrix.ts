@@ -9,7 +9,7 @@ export class DotMatrix {
     private dots: paper.Path.Circle[][];
     private dotSize = 10; // Size of each dot
     private dotSpacing = 15; // Spacing between dots
-
+    private next:DotMatrix;
 
     constructor(rows: number, columns: number) {
         this.rows = rows;
@@ -21,7 +21,7 @@ export class DotMatrix {
             this.matrix[i] = [];
             this.dots[i] = [];
             const dotY = i * this.dotSpacing + this.dotSpacing / 2;
-            
+
             for (let j = 0; j < columns; j++) {
                 this.matrix[i][j] = false;
                 this.dots[i][j] = new paper.Path.Circle(new paper.Point(0, 0), this.dotSize / 2);
@@ -36,6 +36,11 @@ export class DotMatrix {
 
         console.log(this.matrix);
     }
+
+    connectTo(next: DotMatrix) {
+        this.next = next;
+    }
+
 
     randomize() {
         for (let i = 0; i < this.rows; i++) {
