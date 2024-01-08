@@ -14,7 +14,7 @@ export class DotMatrix {
     private on = true;
     group: paper.Group;
 
-    constructor(rows: number, columns: number) {
+    constructor(columns: number, rows: number) {
     
         this.rows = rows;
         this.columns = columns;
@@ -30,8 +30,8 @@ export class DotMatrix {
             for (let j = 0; j < columns; j++) {
             
                 this.matrix[i][j] = false;
-                this.dots[i][j] = new paper.Path.Rectangle(new paper.Point(0, 0), new paper.Size(1));
-                
+                // this.dots[i][j] = new paper.Path.Rectangle(new paper.Point(0, 0), new paper.Size(1));        
+                        this.dots[i][j] = new paper.Path.Circle(new paper.Point(0, 0), 1);        
                 this.group.addChild(this.dots[i][j]);
 
             }
@@ -60,8 +60,9 @@ export class DotMatrix {
     }
 
     setSize(width: number) {
+
         this.dotSpacing = width / 8;
-        this.dotSize = this.dotSpacing * 0.8;        
+        this.dotSize = this.dotSpacing * 0.5;        
 
         for (let row = 0; row < this.rows; row++) {
             const dotY = row * this.dotSpacing + this.dotSpacing / 2;
@@ -130,6 +131,14 @@ export class DotMatrix {
         }
      
     }
+
+    setColumnByte(column: number, data: number) {
+        if (column >= 0 && column < this.columns) {
+            for (let i = 0; i < this.rows; i++) {
+                this.matrix[i][column] = this.getBit(data, i);
+            }
+        }
+    }
     
     getBit(number: number, position: number): boolean {
         return (number >> position) & 1 ? true : false;
@@ -142,9 +151,8 @@ export class DotMatrix {
         // Loop through each dot in the matrix
         for (let row = 0; row < this.rows; row++) {
             for (let column = 0; column < this.columns; column++) {                
-                // // Draw a circular dot
                 const dot = this.dots[row][column];             
-                dot.fillColor = this.matrix[row][column] ? 'red' : 'black';
+                dot.fillColor = this.matrix[row][column] ? 'white' : 'black';
                 dot.strokeColor = 'black';
                 dot.strokeWidth = 0;
             }

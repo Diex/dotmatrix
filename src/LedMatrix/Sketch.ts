@@ -16,13 +16,7 @@ export class Sketch {
 
         this.bb = new Bytebeat();
         this.dotmatrix = [];
-        // inputSlider.onchange = () => {
-        //     this.numrows = parseInt(inputSlider.value);
-        //     this.group.removeChildren();
-        //     this.dotmatrix = [];
-        //     // this.setup(canvas, inputSlider);
-        // }
-        
+
 
         let centerx = canvas.width/2;
         let centery = canvas.height/2;
