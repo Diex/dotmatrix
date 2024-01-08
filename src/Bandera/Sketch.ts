@@ -16,8 +16,8 @@ constructor(canvas: HTMLCanvasElement,) {
         const row: DotMatrix[] = [];
         for (let j = 0; j < this.numrows; j++) {
             let dm = new DotMatrix(8, 8);
-            // dm.setSize(200);
-            // dm.setLocation(i * dm.size.width, j*dm.size.height); // Set the location of each DotMatrix
+            dm.setSize(120);
+            // dm.setLocation(i * 120, j*120); // Set the location of each DotMatrix
             dm.randomize();
             row.push(dm);
         }

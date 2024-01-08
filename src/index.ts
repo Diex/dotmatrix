@@ -17,8 +17,8 @@ window.onload = () => {
     // document.getElementById("download-to-svg").onclick = download;
     
     // let sketch = new clothgen(canvas);
-    let sketch = new ledmatrix(canvas, document.getElementById("numrows") as HTMLInputElement);
-    // let sketch = new bandera(canvas);
+    // let sketch = new ledmatrix(canvas, document.getElementById("numrows") as HTMLInputElement);
+    let sketch = new bandera(canvas);
     sketch.render();
 
     window['paper'] = Paper;

@@ -15,48 +15,65 @@ export class DotMatrix {
     group: paper.Group;
 
     constructor(rows: number, columns: number) {
+    
         this.rows = rows;
         this.columns = columns;
         this.matrix = [];
         this.dots = [];
         this.group = new paper.Group();
         
-        // this.size = new paper.Size(this.dotSpacing*columns, this.dotSpacing*rows); // Size of each dot plus 
-        this.setSize(120);
-
+    
         for (let i = 0; i < rows; i++) {
-
             this.matrix[i] = [];
             this.dots[i] = [];
             
-            const dotY = i * this.dotSpacing + this.dotSpacing / 2;
-
             for (let j = 0; j < columns; j++) {
             
                 this.matrix[i][j] = false;
-                this.dots[i][j] = new paper.Path.Rectangle(new paper.Point(0, 0), new paper.Size(this.dotSize));
+                this.dots[i][j] = new paper.Path.Rectangle(new paper.Point(0, 0), new paper.Size(1));
                 
                 this.group.addChild(this.dots[i][j]);
-                
-                const dotX = j * this.dotSpacing + this.dotSpacing / 2;
-                
-                this.dots[i][j].position.x = dotX;
-                this.dots[i][j].position.y = dotY;
+
             }
         }
 
         
     }
 
+    resizeDimensions(elem:paper.Path,width:number,height:number){
+        //calc scale coefficients and store current position
+        var scaleX = width/elem.bounds.width;
+        var scaleY = height/elem.bounds.height;
+        var prevPos = new paper.Point(elem.bounds.x,elem.bounds.y);
+    
+        //apply calc scaling
+        elem.scale(scaleX,scaleY);
+    
+        //reposition the elem to previous pos(scaling moves the elem so we reset it's position);
+        var newPos = prevPos.add(new paper.Point(elem.bounds.width/2,elem.bounds.height/2));
+        elem.position = newPos;
+    }
+    
+
     connectTo(next: DotMatrix) {
         this.next = next;
     }
 
     setSize(width: number) {
-
         this.dotSpacing = width / 8;
         this.dotSize = this.dotSpacing * 0.8;        
-        // this.size = new paper.Size(width, width); // Size of each dot plus 
+
+        for (let row = 0; row < this.rows; row++) {
+            const dotY = row * this.dotSpacing + this.dotSpacing / 2;
+            for (let column = 0; column < this.columns; column++) {                
+                // // Draw a circular dot
+                const dot = this.dots[row][column];             
+                this.resizeDimensions(dot,this.dotSize,this.dotSize);
+                const dotX = column * this.dotSpacing + this.dotSpacing / 2;               
+                this.dots[row][column].position.x = dotX;
+                this.dots[row][column].position.y = dotY;
+            }
+        }
     }
 
     randomize() {
@@ -127,8 +144,6 @@ export class DotMatrix {
             for (let column = 0; column < this.columns; column++) {                
                 // // Draw a circular dot
                 const dot = this.dots[row][column];             
-                // dot.bounds.size = new paper.Size(this.dotSize/2, this.dotSize/2);
-                // dot.bounds.size = new paper.Size(100, 100);
                 dot.fillColor = this.matrix[row][column] ? 'red' : 'black';
                 dot.strokeColor = 'black';
                 dot.strokeWidth = 0;
