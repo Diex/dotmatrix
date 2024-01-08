@@ -4,5 +4,6 @@ html, body, #content {
     width: 100vw; 
     height: 100vh;
     overflow: hidden;
-    background-color: gray;
+    background-color: black;
 }
+

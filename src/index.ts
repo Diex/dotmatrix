@@ -1,6 +1,7 @@
 import * as Paper from "paper";
 import {Sketch as clothgen} from "./ClothGen/Sketch";
 import {Sketch as ledmatrix} from "./LedMatrix/Sketch";
+import {Sketch as bandera} from "./Bandera/Sketch";
 
 const paths: any[] = [];
 
@@ -13,10 +14,11 @@ window.onload = () => {
     }
     Paper.setup(canvas);
     
-    document.getElementById("download-to-svg").onclick = download;
+    // document.getElementById("download-to-svg").onclick = download;
     
     // let sketch = new clothgen(canvas);
-    let sketch = new ledmatrix(canvas);
+    let sketch = new ledmatrix(canvas, document.getElementById("numrows") as HTMLInputElement);
+    // let sketch = new bandera(canvas);
     sketch.render();
 
     window['paper'] = Paper;
