@@ -62,7 +62,7 @@ export class DotMatrix {
     setSize(width: number) {
 
         this.dotSpacing = width / 8;
-        this.dotSize = this.dotSpacing * 0.5;        
+        this.dotSize = this.dotSpacing * 0.3;        
 
         for (let row = 0; row < this.rows; row++) {
             const dotY = row * this.dotSpacing + this.dotSpacing / 2;
@@ -158,4 +158,7 @@ export class DotMatrix {
             }
         }
     }
+
+
+
 }
