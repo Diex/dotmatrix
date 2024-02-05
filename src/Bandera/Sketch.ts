@@ -25,7 +25,7 @@ export class Sketch {
         for (let i = 0; i < this.numcolumns; i++) {
             const row: DotMatrix[] = [];
             for (let j = 0; j < this.numrows; j++) {
-                let dm = new DotMatrix(8, 12);
+                let dm = new DotMatrix(8, 8);
                 dm.setSize(size);
                 dm.setLocation(i * size + offsetX, j * size + offsetY); // Set the location of each DotMatrix with offset
                 dm.randomize();
@@ -47,6 +47,7 @@ export class Sketch {
             for (let y = 0; y < 1; y++) {
                 for (let i = 0; i < 8; i++) {
                     let val = this.bb.generate(y * 3 + x*8 + this.iteration + i, y);
+                    // val = 255;
                     // let val = this.pattern[y][x * 8 + i];
                     this.dotMatrixArray[x][y].setColumnByte(i, val);
                     this.dotMatrixArray[x][y + 1].setColumnByte(i, this.reverseBitOrder(val));

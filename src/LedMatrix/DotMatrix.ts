@@ -5,7 +5,6 @@ export class DotMatrix {
     private columns: number;
     
     private matrix: boolean[][];
-
     private dots: paper.Path.Circle[][];
     private dotSize:number; // Size of each dot
     private dotSpacing:number; // Spacing between dots
@@ -30,8 +29,9 @@ export class DotMatrix {
             for (let j = 0; j < columns; j++) {
             
                 this.matrix[i][j] = false;
-                // this.dots[i][j] = new paper.Path.Rectangle(new paper.Point(0, 0), new paper.Size(1));        
-                        this.dots[i][j] = new paper.Path.Circle(new paper.Point(0, 0), 1);        
+                this.dots[i][j] = new paper.Path.Rectangle(new paper.Point(0, 0), new paper.Size(20));      
+                // console.log(this.dots[i][j])  
+                        // this.dots[i][j] = new paper.Path.Circle(new paper.Point(0, 0), 1);        
                 this.group.addChild(this.dots[i][j]);
 
             }
@@ -48,7 +48,7 @@ export class DotMatrix {
     
         //apply calc scaling
         elem.scale(scaleX,scaleY);
-    
+        
         //reposition the elem to previous pos(scaling moves the elem so we reset it's position);
         var newPos = prevPos.add(new paper.Point(elem.bounds.width/2,elem.bounds.height/2));
         elem.position = newPos;
@@ -152,8 +152,8 @@ export class DotMatrix {
         for (let row = 0; row < this.rows; row++) {
             for (let column = 0; column < this.columns; column++) {                
                 const dot = this.dots[row][column];             
-                dot.fillColor = this.matrix[row][column] ? 'white' : 'black';
-                dot.strokeColor = 'black';
+                dot.fillColor = this.matrix[row][column] ? 'red' : 'black';
+                // dot.strokeColor = 'black';
                 dot.strokeWidth = 0;
             }
         }
