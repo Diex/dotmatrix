@@ -11,8 +11,8 @@ export class Sketch {
     
     group: paper.Group;
     
-    numcols: number = 3; // Add numcolumns property
-    numrows: number = 4; // Add numrows property
+    numcols: number = 1; // Add numcolumns property
+    numrows: number = 1; // Add numrows property
     
 
 
@@ -21,45 +21,49 @@ export class Sketch {
     constructor(canvas: HTMLCanvasElement, inputSlider: HTMLInputElement) {
 
         console.log("Sketch constructor");
-
+        this.canvas = canvas;
         this.bb = new Bytebeat();
-    
         this.panels = [];
 
 
         let centerx = canvas.width/2;
         let centery = canvas.height/2;
-        // let startx = 0; //centerx ;
-        // let starty = 0; //centery ;
-        let panelSize = 200; //canvas.width/this.numcols*.4;
-        this.canvas = canvas;        
+        
+        let panelSize = 400; 
+                
 
         this.group = new paper.Group();
+        
         console.log('canvaswidth', canvas.width);
         console.log('panelsize', panelSize);
 
-        for(let column = 0; column < this.numcols; column++){
-            for(let row = 0; row < this.numrows; row++){ // Use numrows property
-                let panel = new DotMatrix(panelSize);
+        // for(let column = 0; column < this.numcols; column++){
+        //     for(let row = 0; row < this.numrows; row++){ // Use numrows property
                 
-                panel.setLocation(
-                    centerx + column * panel.group.bounds.width , 
-                    centery + row * panel.group.bounds.height);
+        //         let panel = new DotMatrix(panelSize);
                 
-                    // panel.setLocation(0,0);
+        //         panel.setLocation(
+        //            300+  column * panel.group.bounds.width , 
+        //             300 + row * panel.group.bounds.height);
                 
-                    // console.log('panel', panel.group.position);
-                panel.enable(Math.random() < 0.5 ? true : false);         
-                // panel.enable(true);       
-                this.group.addChild(panel.group);
+        //             // panel.setLocation(0,0);
+                
+        //             // console.log('panel', panel.group.position);
+        //         // panel.enable(Math.random() < 0.5 ? true : false);         
+        //         panel.enable(false);       
+        //         this.group.addChild(panel.group);
 
-                this.panels[row*this.numcols+column] = panel;
+        //         this.panels[row*this.numcols+column] = panel;
+                
+        //         panel.group.bounds.selected = true;
                 
                 
-                
-            }            
-        }
+        //     }            
+        // }
         
+        this.panels[0] = new DotMatrix(panelSize);
+        this.panels[0].setLocation(300,300);
+        this.panels[0].group.bounds.selected = true;
         // this.group.rotate(90);
         
         this.render();   
@@ -86,8 +90,7 @@ export class Sketch {
             for(let y = 0; y < this.numrows; y++){                
                 
                 for(let i = 0; i < 8; i++){
-                        let val = this.bb.generate(y*3+x+this.iteration+i, 2);
-                        
+                        let val = this.bb.generate(y*3+x+this.iteration+i, 2);                        
                         this.panels[y*this.numcols+x].setColumnByte(i, val);
                         if(!this.panels[y*this.numcols+x].on) this.panels[y*this.numcols+x].clear();
                 }

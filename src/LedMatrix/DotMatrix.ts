@@ -13,42 +13,48 @@ export class DotMatrix {
     
     public on = true;
     group: paper.Group;
-    public dim: paper.Size;
+    // public dim: paper.Size;
     private gap = 0.9;
-    constructor(size: number = 10) {
+    constructor(size: number) {
 
         this.elSize = size/this.columns;
         this.matrix = [];
         this.el = [];
         this.group = new paper.Group();
         
-        // console.log("DotMatrix constructor");
+        const dimension = new paper.Size(this.elSize*this.gap, this.elSize*this.gap);
 
-        for (let column = 0; column < this.rows; column++) {
+        const gapSize = this.elSize * (1-this.gap) / 2;
+
+        for (let column = 0; column < this.columns; column++) {
             
             this.matrix[column] = [];
             this.el[column] = [];
             
-            for (let row = 0; row < this.columns; row++) {
+            for (let row = 0; row < this.rows; row++) {
             
                 this.matrix[column][row] = false;
-                this.el[column][row] = new paper.Path.Rectangle(new paper.Point(0, 0), new paper.Size(this.elSize*this.gap, this.elSize*this.gap));      
-                this.el[column][row].position.x = column*this.elSize;
-                this.el[column][row].position.y = row*this.elSize;
-                this.group.addChild(this.el[column][row]);     
-                           
-                // console.log(this.el[column][row].position.x);   
 
+                const center = new paper.Point(column * this.elSize + gapSize, row * this.elSize+gapSize);                
+                const dot = new paper.Path.Rectangle(center, dimension); 
+                
+                this.el[column][row] = dot;
+                this.group.addChild(dot);                                
+                // console.log(this.el[column][row].position.x);   
 
             }
         }
+
+
+        const fakBound = new paper.Path.Rectangle(new paper.Point(0,0), new paper.Size(this.columns, this.rows).multiply(this.elSize));
+        this.group.addChild(fakBound);
 
 
         const scale = 0.97;
         // this.group.scale(scale);
 
         // this.dim = new paper.Size(this.elSize*this.rows ,this.elSize*this.columns );
-        this.dim = new paper.Size(this.group.bounds.width ,this.group.bounds.height );
+        // this.dim = new paper.Size(this.group.bounds.width ,this.group.bounds.height );
         // console.log('dim', this.dim);
         
         
@@ -144,10 +150,7 @@ export class DotMatrix {
     }
 
     render(canvas:any) {
-
-        
-        
-        // Loop through each dot in the matrix
+    // Loop through each dot in the matrix
         for (let row = 0; row < this.rows; row++) {
             for (let column = 0; column < this.columns; column++) {                
                 const dot = this.el[row][column];             
