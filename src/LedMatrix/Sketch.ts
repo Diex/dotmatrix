@@ -5,40 +5,63 @@ import * as paper from "paper";
 
 export class Sketch {
     
-    dotmatrix: DotMatrix[];
     canvas: HTMLCanvasElement;
+    panels: DotMatrix[];    
     bb:Bytebeat;
+    
     group: paper.Group;
-    numrows: number = 5; // Add numrows property
+    
+    numcols: number = 3; // Add numcolumns property
+    numrows: number = 4; // Add numrows property
+    
+
+
+    // dotMatrixPanel: DotMatrix = new DotMatrix(10);
 
     constructor(canvas: HTMLCanvasElement, inputSlider: HTMLInputElement) {
+
         console.log("Sketch constructor");
 
         this.bb = new Bytebeat();
-        this.dotmatrix = [];
+    
+        this.panels = [];
 
 
         let centerx = canvas.width/2;
         let centery = canvas.height/2;
-        let panelswidth = 3*8*15;
-        let panelsheight = this.numrows*8*15; // Use numrows property
-        let startx = centerx - panelswidth/2;
-        let starty = centery - panelsheight/2;
-
+        // let startx = 0; //centerx ;
+        // let starty = 0; //centery ;
+        let panelSize = 200; //canvas.width/this.numcols*.4;
         this.canvas = canvas;        
 
         this.group = new paper.Group();
+        console.log('canvaswidth', canvas.width);
+        console.log('panelsize', panelSize);
 
-        for(let x = 0; x < 3; x++){
-            for(let y = 0; y < this.numrows; y++){ // Use numrows property
-                this.dotmatrix[y*3+x] = new DotMatrix(8, 8);
-                this.dotmatrix[y*3+x].setLocation(startx + x*8*15, starty + y*8*15);
-                this.dotmatrix[y*3+x].enable(Math.random() < 0.5 ? true : false);
-                this.group.addChild(this.dotmatrix[y*3+x].group);
+        for(let column = 0; column < this.numcols; column++){
+            for(let row = 0; row < this.numrows; row++){ // Use numrows property
+                let panel = new DotMatrix(panelSize);
+                
+                panel.setLocation(
+                    centerx + column * panel.group.bounds.width , 
+                    centery + row * panel.group.bounds.height);
+                
+                    // panel.setLocation(0,0);
+                
+                    // console.log('panel', panel.group.position);
+                panel.enable(Math.random() < 0.5 ? true : false);         
+                // panel.enable(true);       
+                this.group.addChild(panel.group);
+
+                this.panels[row*this.numcols+column] = panel;
+                
+                
+                
             }            
         }
         
-        this.group.rotate(90);
+        // this.group.rotate(90);
+        
         this.render();   
     }
     
@@ -46,16 +69,31 @@ export class Sketch {
 
     render() {
 
-        
-        // The purpose of these operations isn't clear from the code alone, but they seem to be generating some kind of value based on the input parameters. The exact nature of the value would depend on the specific values of ut and form.
-        for(let x = 0; x < 3; x++){
+        // test
+        // const center = new paper.Point(this.canvas.width / 2, this.canvas.height / 2);
+        // const width = this.canvas.width / 2;
+        // const height = this.canvas.height / 2;
+        // const rectangle = new paper.Rectangle(  center.subtract(center.divide(2)) , new paper.Size(width, height));
+        // const path = new paper.Path.Rectangle(rectangle);
+        // path.fillColor = 'red';
+        // this.group.addChild(path);
+
+        // this.dotMatrixPanel.randomize();
+        // this.dotMatrixPanel.render(this.canvas);
+
+        // // The purpose of these operations isn't clear from the code alone, but they seem to be generating some kind of value based on the input parameters. The exact nature of the value would depend on the specific values of ut and form.
+        for(let x = 0; x < this.numcols; x++){
             for(let y = 0; y < this.numrows; y++){                
+                
                 for(let i = 0; i < 8; i++){
-                        let val = this.bb.generate(y*3+x+this.iteration+i, y);
-                        this.dotmatrix[y*3+x].setRowByte(i, val);
+                        let val = this.bb.generate(y*3+x+this.iteration+i, 2);
+                        
+                        this.panels[y*this.numcols+x].setColumnByte(i, val);
+                        if(!this.panels[y*this.numcols+x].on) this.panels[y*this.numcols+x].clear();
                 }
 
-                this.dotmatrix[y*3+x].render(this.canvas);        
+                this.panels[y*this.numcols+x].render(this.canvas);        
+                
             }            
         }
 

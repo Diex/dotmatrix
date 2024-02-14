@@ -13,8 +13,9 @@ window.onload = () => {
     throw new Error('Could not find canvas named content in document!');
     // see: templates/index.handlebars
   }
+
   Paper.setup(canvas);
-  
+  console.log("paper", canvas.width, canvas.height);  
   // document.getElementById("download-to-svg").onclick = download;
   
   // let sketch = new clothgen(canvas);
@@ -39,7 +40,10 @@ window.onload = () => {
   stopRecordingButton.onclick = () => stopRecording();
   div.appendChild(stopRecordingButton);
 
-
+  const downloadButton = document.createElement("button");
+  downloadButton.innerText = "Download";
+  downloadButton.onclick = () => download();
+  div.appendChild(downloadButton);
  
 };
 
@@ -68,7 +72,7 @@ function download() {
     console.log("download");
     var fileName = "custom.svg";
     var scaling = Paper.view.scaling;
-    Paper.view.scaling = new Paper.Point(72 / 25.4, 72 / 25.4);    
+    // Paper.view.scaling = new Paper.Point(72 / 25.4, 72 / 25.4);    
     var url = "data:image/svg+xml;utf8," + encodeURIComponent(Paper.project.exportSVG({ asString: true }) as unknown as string);
     var link = document.createElement("a");
     link.download = fileName;

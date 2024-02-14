@@ -1,81 +1,78 @@
 import * as paper from "paper";
 
 export class DotMatrix {
-    private rows: number;
-    private columns: number;
+    private rows: number = 8;
+    private columns: number = 8;    
     
     private matrix: boolean[][];
-    private dots: paper.Path.Circle[][];
-    private dotSize:number; // Size of each dot
-    private dotSpacing:number; // Spacing between dots
-    // public size: paper.Size;
-    private next:DotMatrix;
-    private on = true;
-    group: paper.Group;
-
-    constructor(columns: number, rows: number) {
+    private el: paper.Path[][];
     
-        this.rows = rows;
-        this.columns = columns;
+    private elSize:number; // Size of each dot
+    
+    // private elSpacing:number; // Spacing between dots
+    
+    public on = true;
+    group: paper.Group;
+    public dim: paper.Size;
+    private gap = 0.9;
+    constructor(size: number = 10) {
+
+        this.elSize = size/this.columns;
         this.matrix = [];
-        this.dots = [];
+        this.el = [];
         this.group = new paper.Group();
         
-    
-        for (let i = 0; i < rows; i++) {
-            this.matrix[i] = [];
-            this.dots[i] = [];
+        // console.log("DotMatrix constructor");
+
+        for (let column = 0; column < this.rows; column++) {
             
-            for (let j = 0; j < columns; j++) {
+            this.matrix[column] = [];
+            this.el[column] = [];
             
-                this.matrix[i][j] = false;
-                this.dots[i][j] = new paper.Path.Rectangle(new paper.Point(0, 0), new paper.Size(20));      
-                // console.log(this.dots[i][j])  
-                        // this.dots[i][j] = new paper.Path.Circle(new paper.Point(0, 0), 1);        
-                this.group.addChild(this.dots[i][j]);
+            for (let row = 0; row < this.columns; row++) {
+            
+                this.matrix[column][row] = false;
+                this.el[column][row] = new paper.Path.Rectangle(new paper.Point(0, 0), new paper.Size(this.elSize*this.gap, this.elSize*this.gap));      
+                this.el[column][row].position.x = column*this.elSize;
+                this.el[column][row].position.y = row*this.elSize;
+                this.group.addChild(this.el[column][row]);     
+                           
+                // console.log(this.el[column][row].position.x);   
+
 
             }
         }
 
+
+        const scale = 0.97;
+        // this.group.scale(scale);
+
+        // this.dim = new paper.Size(this.elSize*this.rows ,this.elSize*this.columns );
+        this.dim = new paper.Size(this.group.bounds.width ,this.group.bounds.height );
+        // console.log('dim', this.dim);
+        
         
     }
 
-    resizeDimensions(elem:paper.Path,width:number,height:number){
-        //calc scale coefficients and store current position
-        var scaleX = width/elem.bounds.width;
-        var scaleY = height/elem.bounds.height;
-        var prevPos = new paper.Point(elem.bounds.x,elem.bounds.y);
-    
-        //apply calc scaling
-        elem.scale(scaleX,scaleY);
-        
-        //reposition the elem to previous pos(scaling moves the elem so we reset it's position);
-        var newPos = prevPos.add(new paper.Point(elem.bounds.width/2,elem.bounds.height/2));
-        elem.position = newPos;
-    }
-    
 
-    connectTo(next: DotMatrix) {
-        this.next = next;
-    }
 
-    setSize(width: number) {
+    // setSize(width: number) {
 
-        this.dotSpacing = width / 8;
-        this.dotSize = this.dotSpacing * 0.3;        
+    //     this.elSpacing = width / 8;
+    //     this.elSize = this.elSpacing * 0.3;        
 
-        for (let row = 0; row < this.rows; row++) {
-            const dotY = row * this.dotSpacing + this.dotSpacing / 2;
-            for (let column = 0; column < this.columns; column++) {                
-                // // Draw a circular dot
-                const dot = this.dots[row][column];             
-                this.resizeDimensions(dot,this.dotSize,this.dotSize);
-                const dotX = column * this.dotSpacing + this.dotSpacing / 2;               
-                this.dots[row][column].position.x = dotX;
-                this.dots[row][column].position.y = dotY;
-            }
-        }
-    }
+    //     for (let row = 0; row < this.rows; row++) {
+    //         const dotY = row * this.elSpacing + this.elSpacing / 2;
+    //         for (let column = 0; column < this.columns; column++) {                
+    //             // // Draw a circular dot
+    //             const dot = this.el[row][column];             
+    //             // this.resizeDimensions(dot,this.elSize,this.elSize);
+    //             const dotX = column * this.elSpacing + this.elSpacing / 2;               
+    //             this.el[row][column].position.x = dotX;
+    //             this.el[row][column].position.y = dotY;
+    //         }
+    //     }
+    // }
 
     randomize() {
         for (let i = 0; i < this.rows; i++) {
@@ -83,6 +80,8 @@ export class DotMatrix {
                 this.matrix[i][j] = Math.random() < 0.5;
             }
         }
+
+        // console.table(this.matrix);
     }
 
     setLocation(x: number,y: number){
@@ -146,12 +145,12 @@ export class DotMatrix {
 
     render(canvas:any) {
 
-        if(!this.on) return;
+        
         
         // Loop through each dot in the matrix
         for (let row = 0; row < this.rows; row++) {
             for (let column = 0; column < this.columns; column++) {                
-                const dot = this.dots[row][column];             
+                const dot = this.el[row][column];             
                 dot.fillColor = this.matrix[row][column] ? 'red' : 'black';
                 // dot.strokeColor = 'black';
                 dot.strokeWidth = 0;

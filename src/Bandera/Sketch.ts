@@ -22,19 +22,19 @@ export class Sketch {
         let offsetX = (canvasWidth - groupWidth) / 2;
         let offsetY = (canvasHeight - groupHeight) / 2;
 
-        for (let i = 0; i < this.numcolumns; i++) {
-            const row: DotMatrix[] = [];
-            for (let j = 0; j < this.numrows; j++) {
-                let dm = new DotMatrix(8, 8);
-                dm.setSize(size);
-                dm.setLocation(i * size + offsetX, j * size + offsetY); // Set the location of each DotMatrix with offset
-                dm.randomize();
+        // for (let i = 0; i < this.numcolumns; i++) {
+        //     const row: DotMatrix[] = [];
+        //     for (let j = 0; j < this.numrows; j++) {
+        //         let dm = new DotMatrix(8, 8);
+        //         dm.setSize(size);
+        //         dm.setLocation(i * size + offsetX, j * size + offsetY); // Set the location of each DotMatrix with offset
+        //         dm.randomize();
 
-                this.group.addChild(dm.group);
-                row.push(dm);
-            }
-            this.dotMatrixArray.push(row);
-        }
+        //         this.group.addChild(dm.group);
+        //         row.push(dm);
+        //     }
+        //     this.dotMatrixArray.push(row);
+        // }
     }
 
 
