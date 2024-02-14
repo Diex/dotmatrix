@@ -26,7 +26,8 @@ export class Sketch {
         let centerx = canvas.width / 2;
         let centery = canvas.height / 2;
 
-        let panelSize = canvas.height / this.numrows;
+        // let panelSize = canvas.height / this.numrows;
+        let panelSize = 32;
 
 
         this.group = new paper.Group();

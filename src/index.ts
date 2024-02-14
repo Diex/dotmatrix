@@ -41,7 +41,7 @@ window.onload = () => {
   div.appendChild(stopRecordingButton);
 
   const downloadButton = document.createElement("button");
-  downloadButton.innerText = "Download";
+  downloadButton.innerText = "Download Svg";
   downloadButton.onclick = () => download();
   div.appendChild(downloadButton);
  
@@ -72,7 +72,7 @@ function download() {
     console.log("download");
     var fileName = "custom.svg";
     var scaling = Paper.view.scaling;
-    // Paper.view.scaling = new Paper.Point(72 / 25.4, 72 / 25.4);    
+    Paper.view.scaling = new Paper.Point(72 / 25.4, 72 / 25.4);    
     var url = "data:image/svg+xml;utf8," + encodeURIComponent(Paper.project.exportSVG({ asString: true }) as unknown as string);
     var link = document.createElement("a");
     link.download = fileName;
