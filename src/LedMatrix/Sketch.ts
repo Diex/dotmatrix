@@ -34,10 +34,16 @@ export class Sketch {
         // let panelSize = canvas.height / this.numrows;
         let panelSize = 32; // mm
 
+        const background = new paper.Path.Rectangle(paper.view.bounds);
+        background.fillColor = 'black';
+
+        
         this.matrix = new paper.Group();
 
         console.log('canvaswidth', canvas.width);
         console.log('panelsize', panelSize);
+        
+        
 
         for (let column = 0; column < this.numcols; column++) {
             for (let row = 0; row < this.numrows; row++) { // Use numrows property
@@ -51,10 +57,8 @@ export class Sketch {
                 panel.enable(Math.random() < 0.2 ? true : false);
                 // panel.enable(false);       
                 this.matrix.addChild(panel.drawable);
-
                 this.panels[row * this.numcols + column] = panel;
-
-                // panel.drawable.bounds.selected = true;
+                
 
 
             }
@@ -62,15 +66,11 @@ export class Sketch {
 
         this.matrix.position.x = centerx;
         this.matrix.position.y = centery;
+        setInterval(this.resetMatrix.bind(this), 10000);
 
         // this.render();
-
-        setInterval(this.resetMatrix.bind(this), 10000);
         this.saveFrames();
-        console.log(
-
-        );
-
+        
     }
 
 
@@ -190,20 +190,10 @@ export class Sketch {
 
     async saveFrames() {
 
-        const numFrames = 5; // Number of frames to save
+        const numFrames = 50; // Number of frames to save
         const delay = 1; // Delay between frames in milliseconds
 
         for (let i = 0; i < numFrames; i++) {
-            // console.log(f);
-            // this.frames.push(f);
-
-            // const blob = new Blob(f, { type: 'image/png' })
-            // const fileStream = streamsaver.createWriteStream(`image_${i}.png`, {
-                // size: blob.size // Makes the percentage visiable in the download            
-            // })
-            // const readableStream = blob.stream()
-            // fileStream.
-            
             const form = document.createElement("form");
             form.enctype = "multipart/form-data";
             
@@ -212,21 +202,11 @@ export class Sketch {
             input.type = "file";
             input.name = "image";
             input.accept = "image/*";
-            
-            // input.value = "file";
-
-
             const formData = new FormData(form);       
-            // const file = new File(this.canvas.toBlob(()=>{}, `image_${i}.png`, { type: 'image/png' }));    
             
             this.canvas.toBlob((b) => {
-
                 const file = new File([b], `image_${i}.png`, { type: 'image/png' });
-
-                formData.append('image', file);
-                        
-                // console.log(formData);
-    
+                formData.append('image', file);                        
                 fetch('http://localhost:3000/uploads', {
                     method: 'POST',
                     body: formData
@@ -234,10 +214,6 @@ export class Sketch {
                 });
     
             });
-            // console.log(blob);
-            
-        
-
             this.render(); // Render the next frame
             await new Promise(resolve => setTimeout(resolve, delay)); // Delay between frames
             // setTimeout(window.requestAnimationFrame, 1./8*1000, this.render.bind(this));
