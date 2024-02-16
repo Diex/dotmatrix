@@ -45,6 +45,7 @@ window.onload = () => {
   downloadButton.innerText = "Download Svg";
   downloadButton.onclick = () => download();
   div.appendChild(downloadButton);
+  
  
 };
 
@@ -60,13 +61,10 @@ function updateCounter(counter: HTMLDivElement) {
 
 
 
-function stopRecording() {
-  // Add code to stop recording here
-  clearInterval(timerId);
 
-  mediaRecorder.stop();
+function startRendering() {
+  sketch.saveFrames();
 }
-
 
 
 function download() {
@@ -94,6 +92,13 @@ function startRecording (canvas: HTMLCanvasElement, counter: HTMLDivElement) {
     //   mediaRecorder.stop();
     // }, 6000); // stop recording in 6s
   };
+  
+  function stopRecording() {
+    // Add code to stop recording here
+    clearInterval(timerId);
+    mediaRecorder.stop();
+  }
+
   
   const downloadVideo = async (blob: Blob | MediaSource) => {
     const div = document.querySelector("div");

@@ -10,12 +10,16 @@
   "author": "Floris de Haan",
   "license": "ISC",
   "dependencies": {
+    "express": "^4.18.2",
     "matter-js": "^0.18.0",
-    "paper": "^0.12.0"
+    "multer": "^1.4.5-lts.1",
+    "paper": "^0.12.0",
+    "streamsaver": "^2.0.6"
   },
   "devDependencies": {
     "@types/matter-js": "^0.18.2",
     "@types/paper": "^0.11.9",
+    "@types/streamsaver": "^2.0.4",
     "clean-webpack-plugin": "^2.0.0",
     "copy-webpack-plugin": "^5.0.0",
     "fork-ts-checker-webpack-plugin": "^1.0.0",

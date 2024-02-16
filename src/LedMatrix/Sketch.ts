@@ -2,6 +2,7 @@ import { DotMatrix } from "./DotMatrix";
 import { Bytebeat } from "./../Bytebeat/Bytebeat";
 
 import * as paper from "paper";
+import * as streamsaver from "streamsaver";
 
 export class Sketch {
 
@@ -11,8 +12,8 @@ export class Sketch {
 
     matrix: paper.Group;
 
-    numcols: number = 3; // Add numcolumns property
-    numrows: number = 16; // Add numrows property
+    numcols: number = 20; // Add numcolumns property
+    numrows: number = 20; // Add numrows property
 
     whiteDots: paper.Item[] = [];
 
@@ -20,9 +21,9 @@ export class Sketch {
 
         console.log("Sketch constructor");
         this.canvas = canvas;
-        paper.view.scaling = new paper.Point(4,4);
+        paper.view.scaling = new paper.Point(2, 2);
         paper.view.rotate(90);
-        
+
         this.bb = new Bytebeat();
 
         this.panels = [];
@@ -46,7 +47,7 @@ export class Sketch {
                 panel.setLocation(
                     column * panel.dim.width,
                     row * panel.dim.height);
-                
+
                 panel.enable(Math.random() < 0.2 ? true : false);
                 // panel.enable(false);       
                 this.matrix.addChild(panel.drawable);
@@ -62,18 +63,18 @@ export class Sketch {
         this.matrix.position.x = centerx;
         this.matrix.position.y = centery;
 
-        this.render();
+        // this.render();
 
         setInterval(this.resetMatrix.bind(this), 10000);
-
+        this.saveFrames();
         console.log(
-            
+
         );
 
     }
 
-  
-    resetMatrix(){
+
+    resetMatrix() {
         for (let column = 0; column < this.numcols; column++) {
             for (let row = 0; row < this.numrows; row++) { // Use numrows property
                 this.panels[row * this.numcols + column]
@@ -82,16 +83,16 @@ export class Sketch {
         }
     }
 
-    stashWhiteDots(parent:paper.Group, dots: paper.Item[]){
+    stashWhiteDots(parent: paper.Group, dots: paper.Item[]) {
         dots.forEach(dot => {
-            if(!dot.data.status) {            
-              this.whiteDots.push(dot);
-              dot.remove();
+            if (!dot.data.status) {
+                this.whiteDots.push(dot);
+                dot.remove();
             }
         });
     }
 
-    applyWhiteDots(parent:paper.Group, dots: paper.Item[]){
+    applyWhiteDots(parent: paper.Group, dots: paper.Item[]) {
         dots.forEach(dot => {
             parent.addChild(dot);
         });
@@ -100,18 +101,18 @@ export class Sketch {
 
     hideDots(dots: paper.Item[]) {
         dots.forEach(dot => {
-            dot.visible  = dot.data.status;    
+            dot.visible = dot.data.status;
         });
     }
 
     showDots(dots: paper.Item[]) {
         dots.forEach(dot => {
-            dot.visible  = true; 
+            dot.visible = true;
         });
     }
 
     getDotsFromMatrix(item: paper.Item) {
-        
+
         return item.children;
     }
     getMatrixElements() {
@@ -122,7 +123,7 @@ export class Sketch {
 
     render() {
 
-        
+
 
         // test
         // const center = new paper.Point(this.canvas.width / 2, this.canvas.height / 2);
@@ -137,41 +138,41 @@ export class Sketch {
         // this.dotMatrixPanel.render(this.canvas);
 
         // // The purpose of these operations isn't clear from the code alone, but they seem to be generating some kind of value based on the input parameters. The exact nature of the value would depend on the specific values of ut and form.
-        
+
         for (let x = 0; x < this.numcols; x++) {
             for (let y = 0; y < this.numrows; y++) {
 
-                for (let i = 0; i < 8; i++) {                    
+                for (let i = 0; i < 8; i++) {
                     let val = this.bb.generate(y * 3 + x + this.iteration + i, x * this.numrows + y);
-                    this.panels[y * this.numcols + x].setColumnByte(i, val);                    
+                    this.panels[y * this.numcols + x].setColumnByte(i, val);
                 }
 
-                if (!this.panels[y * this.numcols + x].on) this.panels[y * this.numcols + x].clear();                
+                if (!this.panels[y * this.numcols + x].on) this.panels[y * this.numcols + x].clear();
                 this.panels[y * this.numcols + x].render(this.canvas);
             }
         }
-        
+
         this.iteration++;
-        setTimeout(window.requestAnimationFrame, 1./8*1000, this.render.bind(this));
+        // setTimeout(window.requestAnimationFrame, 1./8*1000, this.render.bind(this));
     }
 
-    download(){
+    download() {
         console.log("download");
         var fileName = "custom.svg";
         var scaling = paper.view.scaling;
-        paper.view.scaling = new paper.Point(72 / 25.4, 72 / 25.4);  
-        
-        
+        paper.view.scaling = new paper.Point(72 / 25.4, 72 / 25.4);
+
+
 
         for (let i = 0; i < this.getMatrixElements().length; i++) {
             // console.log(this.getMatrixElements()[i]);
             this.hideDots(this.getDotsFromMatrix(this.getMatrixElements()[i]));
         }
-      
 
 
 
-        var url = "data:image/svg+xml;utf8," + encodeURIComponent(paper.project.exportSVG({ asString: true }) as unknown as string);        
+
+        var url = "data:image/svg+xml;utf8," + encodeURIComponent(paper.project.exportSVG({ asString: true }) as unknown as string);
         var link = document.createElement("a");
         link.download = fileName;
         link.href = url;
@@ -182,6 +183,79 @@ export class Sketch {
             // console.log(this.getMatrixElements()[i]);
             this.showDots(this.getDotsFromMatrix(this.getMatrixElements()[i]));
         }
-    
+
     }
+
+    frames: string[] = [];
+
+    async saveFrames() {
+
+        const numFrames = 5; // Number of frames to save
+        const delay = 1; // Delay between frames in milliseconds
+
+        for (let i = 0; i < numFrames; i++) {
+            // console.log(f);
+            // this.frames.push(f);
+
+            // const blob = new Blob(f, { type: 'image/png' })
+            // const fileStream = streamsaver.createWriteStream(`image_${i}.png`, {
+                // size: blob.size // Makes the percentage visiable in the download            
+            // })
+            // const readableStream = blob.stream()
+            // fileStream.
+            
+            const form = document.createElement("form");
+            form.enctype = "multipart/form-data";
+            
+            const input = document.createElement("input");
+            form.appendChild(input);
+            input.type = "file";
+            input.name = "image";
+            input.accept = "image/*";
+            
+            // input.value = "file";
+
+
+            const formData = new FormData(form);       
+            // const file = new File(this.canvas.toBlob(()=>{}, `image_${i}.png`, { type: 'image/png' }));    
+            
+            this.canvas.toBlob((b) => {
+
+                const file = new File([b], `image_${i}.png`, { type: 'image/png' });
+
+                formData.append('image', file);
+                        
+                // console.log(formData);
+    
+                fetch('http://localhost:3000/uploads', {
+                    method: 'POST',
+                    body: formData
+                             
+                });
+    
+            });
+            // console.log(blob);
+            
+        
+
+            this.render(); // Render the next frame
+            await new Promise(resolve => setTimeout(resolve, delay)); // Delay between frames
+            // setTimeout(window.requestAnimationFrame, 1./8*1000, this.render.bind(this));
+        }
+
+        // this.framesEnd();
+
+    }
+
+    // framesEnd(){
+    //             // TODO: Save the frames or do something with them
+    //             console.log(this.frames);
+    //             const fs = require('fs');
+
+    //             for (let i = 0; i < this.frames.length; i++) {
+    //                 const frameData = this.frames[i].replace(/^data:image\/png;base64,/, '');
+    //                 fs.writeFileSync(`frame_${i}.png`, frameData, 'base64');
+    //             }
+    // }
+
 }
