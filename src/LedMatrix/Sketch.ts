@@ -37,7 +37,7 @@ export class Sketch {
         const background = new paper.Path.Rectangle(paper.view.bounds);
         background.fillColor = 'black';
 
-        
+
         this.matrix = new paper.Group();
 
         console.log('canvaswidth', canvas.width);
@@ -75,6 +75,7 @@ export class Sketch {
 
 
     resetMatrix() {
+
         for (let column = 0; column < this.numcols; column++) {
             for (let row = 0; row < this.numrows; row++) { // Use numrows property
                 this.panels[row * this.numcols + column]
@@ -189,7 +190,8 @@ export class Sketch {
     frames: string[] = [];
 
     async saveFrames() {
-
+        // from: https://medium.com/@livajorge7/a-comprehensive-guide-to-uploading-and-saving-images-with-node-js-express-js-and-javascript-69137e227c4d
+        
         const numFrames = 50; // Number of frames to save
         const delay = 1; // Delay between frames in milliseconds
 
@@ -202,11 +204,15 @@ export class Sketch {
             input.type = "file";
             input.name = "image";
             input.accept = "image/*";
+            
+            // https://developer.mozilla.org/en-US/docs/Web/API/FormData
             const formData = new FormData(form);       
             
+            // https://developer.mozilla.org/en-US/docs/Web/API/HTMLCanvasElement/toBlob
             this.canvas.toBlob((b) => {
                 const file = new File([b], `image_${i}.png`, { type: 'image/png' });
                 formData.append('image', file);                        
+               
                 fetch('http://localhost:3000/uploads', {
                     method: 'POST',
                     body: formData
