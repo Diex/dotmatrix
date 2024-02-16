@@ -12,9 +12,18 @@ export class DotMatrix {
     // private elSpacing:number; // Spacing between dots
     
     public on = true;
-    group: paper.Group;
+    private group: paper.Group;
     // public dim: paper.Size;
-    private gap = 0.9;
+    private gap = 0.8;
+    
+    public get dim(): paper.Size {
+        return new paper.Size(this.group.bounds.width ,this.group.bounds.width );
+    }
+
+    public get drawable(): paper.Group {
+        return this.group;
+    }
+
     constructor(size: number) {
 
         this.elSize = size/this.columns;
@@ -37,7 +46,8 @@ export class DotMatrix {
 
                 const center = new paper.Point(column * this.elSize + gapSize, row * this.elSize+gapSize);                
                 const dot = new paper.Path.Rectangle(center, dimension); 
-                
+                dot.name = `dot_${column}_${row}`;
+
                 this.el[column][row] = dot;
                 this.group.addChild(dot);                                
                 // console.log(this.el[column][row].position.x);   
@@ -47,8 +57,8 @@ export class DotMatrix {
 
 
         const fakBound = new paper.Path.Rectangle(new paper.Point(0,0), new paper.Size(this.columns, this.rows).multiply(this.elSize));
+        fakBound.name = 'fakBound';
         this.group.addChild(fakBound);
-
 
         const scale = 0.97;
         // this.group.scale(scale);
@@ -154,8 +164,10 @@ export class DotMatrix {
         for (let row = 0; row < this.rows; row++) {
             for (let column = 0; column < this.columns; column++) {                
                 const dot = this.el[row][column];             
-                dot.fillColor = this.matrix[row][column] ? 'red' : 'black';
-                // dot.strokeColor = 'black';
+                // dot.fillColor = this.matrix[row][column] ? 'black' : 'white';
+                dot.fillColor = this.matrix[row][column] ? 'white' : 'black';
+                dot.data = { status: this.matrix[row][column]};
+                dot.strokeColor = 'black';
                 dot.strokeWidth = 0;
             }
         }

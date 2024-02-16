@@ -5,6 +5,7 @@ import {Sketch as bandera} from "./Bandera/Sketch";
 import { count } from "console";
 
 const paths: any[] = [];
+var sketch: ledmatrix;
 
 window.onload = () => {
   
@@ -19,7 +20,7 @@ window.onload = () => {
   // document.getElementById("download-to-svg").onclick = download;
   
   // let sketch = new clothgen(canvas);
-  let sketch = new ledmatrix(canvas, document.getElementById("numrows") as HTMLInputElement);
+  sketch = new ledmatrix(canvas, document.getElementById("numrows") as HTMLInputElement);
   // let sketch = new bandera(canvas);
   sketch.render();
   window['paper'] = Paper;
@@ -69,18 +70,7 @@ function stopRecording() {
 
 
 function download() {
-    console.log("download");
-    var fileName = "custom.svg";
-    var scaling = Paper.view.scaling;
-    Paper.view.scaling = new Paper.Point(72 / 25.4, 72 / 25.4);    
-    var url = "data:image/svg+xml;utf8," + encodeURIComponent(Paper.project.exportSVG({ asString: true }) as unknown as string);
-    var link = document.createElement("a");
-    link.download = fileName;
-    link.href = url;
-    link.click();
-    Paper.view.scaling = scaling;
-
-
+  sketch.download();
 }
 
 var mediaRecorder:any;
